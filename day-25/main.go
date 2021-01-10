@@ -42,15 +42,9 @@ func encryptionKey(subjectNumber int, loopSize int) int {
 	return transformed
 }
 
-// solving the challenge: https://adventofcode.com/2020/day/25
-func main() {
-	// read input file
-	inputFilePath := os.Args[1:]
-	if len(inputFilePath) < 1 {
-		log.Fatal("Missing input file")
-	}
-
-	file, _ := os.Open(inputFilePath[0])
+// parse keys from input file
+func parsePublicKeys(inputFilePath string) []int {
+	file, _ := os.Open(inputFilePath)
 	defer file.Close()
 
 	var lines []int
@@ -59,8 +53,15 @@ func main() {
 		lineInt, _ := strconv.Atoi(scanner.Text())
 		lines = append(lines, lineInt)
 	}
-	cardPublicKey := lines[0]
-	doorPublicKey := lines[1]
+
+	return lines
+}
+
+// solving the challenge: https://adventofcode.com/2020/day/25
+func solve(inputFilePath string) {
+	keys := parsePublicKeys(inputFilePath)
+	cardPublicKey := keys[0]
+	doorPublicKey := keys[1]
 
 	subjectNumber := 7
 	cardLoopSize := loopSize(cardPublicKey, subjectNumber)
@@ -74,4 +75,14 @@ func main() {
 	} else {
 		fmt.Println("Bad input / algo")
 	}
+}
+
+func main() {
+	// read input file
+	inputFilePath := os.Args[1:]
+	if len(inputFilePath) < 1 {
+		log.Fatal("Missing input file")
+	}
+
+	solve(inputFilePath[0])
 }
