@@ -5,24 +5,58 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strings"
 )
+
+var ruleSets []string
+var testCases []string
+
+func match(line string) bool {
+	// build out regex
+	return true
+}
+
+func parseTestCases(line string) {
+	testCases = append(testCases, line)
+}
+
+func parseRuleSet(line string) {
+	lineSplit := strings.Split(line, ":")
+	// fmt.Println(lineSplit[0])
+
+	if len(lineSplit) == 2 {
+		// reached the definition rule. Ex: 4: "a"
+	}
+	fmt.Println(lineSplit[0])
+}
 
 func parseInput(inputFilePath string) []string {
 	file, _ := os.Open(inputFilePath)
 	defer file.Close()
 
 	var lines []string
+
 	scanner := bufio.NewScanner(file)
+	parseTestCasesInput := true
+
 	for scanner.Scan() {
-		// lineInt, _ := strconv.Atoi(scanner.Text())
 		line := scanner.Text()
-		fmt.Println(line)
+
 		if len(line) == 0 {
 			fmt.Println("end of rule")
+			parseTestCasesInput = false
 		}
-		// lines = append(lines)
+
+		if parseTestCasesInput {
+			parseTestCases(line)
+		} else {
+			// parse rule set
+			parseRuleSet(line)
+			// ruleSets = append(ruleSets, line)
+		}
 	}
 
+	fmt.Println(ruleSets, testCases)
 	return lines
 }
 
